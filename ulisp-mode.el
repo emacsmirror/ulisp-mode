@@ -35,11 +35,17 @@
 ;; device and execute the code directly on it.
 
 ;;; Code:
+(defgroup ulisp-mode nil
+  "Major mode for editing and evaluate uLisp."
+  :group 'ulisp-mode)
+
 (defvar ulisp-mode-port ""
   "Stores the port to send data to later.")
 
 (defun ulisp-mode-open-port (port speed)
-  "Opening a PORT at a set SPEED."
+  "Opening a PORT at a set SPEED.
+It also creates a buffer that holds the connection.
+Buffer name matches the PORT."
   (interactive (list (read-string "Port: " "/dev/ttyACM0")
                      (read-string "Speed: " "9600")))
   (make-serial-process
@@ -50,6 +56,11 @@
   (special-mode)
   (setq ulisp-mode-port port))
 
+(defun ulisp-mode-kill-buffer ()
+  "Kill the buffer and kill a connection."
+  (interactive)
+  (kill-buffer ulisp-mode-port))
+
 (defun ulisp-mode-send (str)
   "Sending a string STR to the device."
   (interactive)
@@ -58,11 +69,20 @@
        "The port is not installed, need to execute `ulisp-mode-open-port`")
     (process-send-string ulisp-mode-port str)))
 
+(defun ulisp-mode-block-end ()
+  "A function that try to find the end of an expression.  Dirty hack."
+  (if (equal (char-before) ?\))
+      (backward-char))
+  (up-list)
+  (point))
+
 (defun ulisp-mode-block ()
   "Fetching and sending a code block."
   (interactive)
-  (let ((block-end (point))
+  (let ((initial-point (point))
+        (block-end (ulisp-mode-block-end))
         (block-beginning (backward-list)))
+    (goto-char initial-point)
     (ulisp-mode-send (buffer-substring-no-properties block-beginning
                                                      block-end))))
 
