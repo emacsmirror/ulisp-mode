@@ -4,7 +4,7 @@
 
 ;; Author: DEADBLACKCLOVER <deadblackclover@protonmail.com>
 ;; Version: 0.1.0
-;; URL: https://github.com/deadblackclover/ulisp-mode
+;; URL: https://codeberg.org/deadblackclover/ulisp-mode
 ;; Keywords: languages
 ;; Package-Requires: ((emacs "25.1"))
 
