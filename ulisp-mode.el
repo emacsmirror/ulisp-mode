@@ -59,7 +59,8 @@ Buffer name matches the PORT."
 (defun ulisp-mode-kill-buffer ()
   "Kill the buffer and kill a connection."
   (interactive)
-  (kill-buffer ulisp-mode-port))
+  (kill-buffer ulisp-mode-port)
+  (setq ulisp-mode-port ""))
 
 (defun ulisp-mode-send (str)
   "Sending a string STR to the device."
@@ -90,6 +91,7 @@ Buffer name matches the PORT."
   (let ((map (make-sparse-keymap)))
     (set-keymap-parent map lisp-mode-shared-map)
     (define-key map (kbd "C-c o") 'ulisp-mode-open-port)
+    (define-key map (kbd "C-c k") 'ulisp-mode-kill-buffer)
     (define-key map (kbd "C-c C-c") 'ulisp-mode-block)
     map)
   "Keymap for `ulisp-mode', derived from `lisp-mode'.")
