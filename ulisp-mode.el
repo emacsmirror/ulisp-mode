@@ -59,7 +59,10 @@ Buffer name matches the PORT."
 (defun ulisp-mode-kill-buffer ()
   "Kill the buffer and kill a connection."
   (interactive)
-  (kill-buffer ulisp-mode-port)
+  (if (string= "" ulisp-mode-port)
+      (message
+       "The port is not installed, need to execute `ulisp-mode-open-port`")
+    (kill-buffer ulisp-mode-port))
   (setq ulisp-mode-port ""))
 
 (defun ulisp-mode-send (str)
