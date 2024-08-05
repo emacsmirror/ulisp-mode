@@ -122,7 +122,8 @@ Buffer name matches the PORT."
   :global t
   (if ulisp-mode-line-mode
       (add-to-list 'mode-line-modes '(t ulisp-mode-line-status) t)
-    (delete '(t ulisp-mode-line-status) mode-line-modes)))
+    (if (boundp 'mode-line-modes)
+        (delete '(t ulisp-mode-line-status) mode-line-modes))))
 
 (provide 'ulisp-mode)
 ;;; ulisp-mode.el ends here
