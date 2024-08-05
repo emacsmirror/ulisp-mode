@@ -42,19 +42,25 @@
 (defvar ulisp-mode-port ""
   "Stores the port to send data to later.")
 
+(defvar ulisp-mode-line-status ""
+  "String showing the connection.")
+
 (defun ulisp-mode-open-port (port speed)
   "Opening a PORT at a set SPEED.
 It also creates a buffer that holds the connection.
 Buffer name matches the PORT."
   (interactive (list (read-string "Port: " "/dev/ttyACM0")
                      (read-string "Speed: " "9600")))
-  (make-serial-process
-   :port port
-   :speed (string-to-number speed)
-   :buffer (get-buffer-create port))
-  (switch-to-buffer port)
-  (special-mode)
-  (setq ulisp-mode-port port))
+  (let ((buffer (current-buffer)))
+    (make-serial-process
+     :port port
+     :speed (string-to-number speed)
+     :buffer (get-buffer-create port))
+    (switch-to-buffer port)
+    (special-mode)
+    (switch-to-buffer buffer)
+    (setq ulisp-mode-port port)
+    (setq ulisp-mode-line-status (concat "[ Connect: " ulisp-mode-port " ] "))))
 
 (defun ulisp-mode-kill-buffer ()
   "Kill the buffer and kill a connection."
@@ -63,7 +69,8 @@ Buffer name matches the PORT."
       (message
        "The port is not installed, need to execute `ulisp-mode-open-port`")
     (kill-buffer ulisp-mode-port))
-  (setq ulisp-mode-port ""))
+  (setq ulisp-mode-port "")
+  (setq ulisp-mode-line-status ""))
 
 (defun ulisp-mode-send (str)
   "Sending a string STR to the device."
@@ -73,18 +80,14 @@ Buffer name matches the PORT."
        "The port is not installed, need to execute `ulisp-mode-open-port`")
     (process-send-string ulisp-mode-port str)))
 
-(defun ulisp-mode-block-end ()
-  "A function that try to find the end of an expression.  Dirty hack."
-  (if (equal (char-before) ?\))
-      (backward-char))
-  (up-list)
-  (point))
-
 (defun ulisp-mode-block ()
   "Fetching and sending a code block."
   (interactive)
   (let ((initial-point (point))
-        (block-end (ulisp-mode-block-end))
+        (block-end (progn (if (equal (char-before) ?\))
+                              (backward-char))
+                          (up-list)
+                          (point)))
         (block-beginning (backward-list)))
     (goto-char initial-point)
     (ulisp-mode-send (buffer-substring-no-properties block-beginning
@@ -102,6 +105,24 @@ Buffer name matches the PORT."
 (define-derived-mode ulisp-mode lisp-mode "uLisp"
   "Major mode for editing and evaluate uLisp."
   (use-local-map ulisp-mode-map))
+
+(defun ulisp-mode-line-enable ()
+  "Turn on `ulisp-mode-line'."
+  (interactive)
+  (ulisp-mode-line-mode 1))
+
+(defun ulisp-mode-line-disable ()
+  "Turn off `ulisp-mode-line'."
+  (interactive)
+  (ulisp-mode-line-mode -1))
+
+;;;###autoload
+(define-minor-mode ulisp-mode-line-mode
+  "Minor mode to display an open serial port."
+  :global t
+  (if ulisp-mode-line-mode
+      (add-to-list 'mode-line-modes '(t ulisp-mode-line-status) t)
+    (delete '(t ulisp-mode-line-status) mode-line-modes)))
 
 (provide 'ulisp-mode)
 ;;; ulisp-mode.el ends here
