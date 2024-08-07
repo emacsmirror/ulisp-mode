@@ -35,8 +35,9 @@
 ;; device and execute the code directly on it.
 
 ;;; Code:
-(defgroup ulisp-mode nil
-  "Major mode for editing and evaluate uLisp."
+(defgroup ulisp-mode-line nil
+  "Showing information on mode-line."
+  :prefix "ulisp-mode-line-"
   :group 'ulisp-mode)
 
 (defvar ulisp-mode-port ""
@@ -96,8 +97,8 @@ Buffer name matches the PORT."
 (defvar ulisp-mode-map
   (let ((map (make-sparse-keymap)))
     (set-keymap-parent map lisp-mode-shared-map)
-    (define-key map (kbd "C-c o") 'ulisp-mode-open-port)
-    (define-key map (kbd "C-c k") 'ulisp-mode-kill-buffer)
+    (define-key map (kbd "C-c C-o") 'ulisp-mode-open-port)
+    (define-key map (kbd "C-c C-k") 'ulisp-mode-kill-buffer)
     (define-key map (kbd "C-c C-c") 'ulisp-mode-block)
     map)
   "Keymap for `ulisp-mode', derived from `lisp-mode'.")
