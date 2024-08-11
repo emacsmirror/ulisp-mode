@@ -1,0 +1,43 @@
+#+TITLE: ulisp-mode
+
+[[https://img.shields.io/badge/GNU%20Emacs-25.1-b48ead.svg]]
+
+Major mode for editing and evaluate uLisp
+
+* Install
+
+** Melpa
+
+~ulisp-mode~ is available from Melpa. After [[https://melpa.org/#/getting-started][setting up]] Melpa
+as a repository and update the local package list, you can install
+~ulisp-mode~ and its dependencies using ~M-x package-install ulisp-mode~.
+
+** Manually
+
+Add ~ulisp-mode~ to your ~load-path~ and require. Something like:
+
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path "path/to/ulisp-mode/")
+  (require 'ulisp-mode)
+#+END_SRC
+
+* Setup
+
+#+BEGIN_SRC emacs-lisp
+  (ulisp-mode)           ;; Enable ulisp-mode
+  (ulisp-mode-line-mode) ;; Enable ulisp-mode-line for display connection status
+#+END_SRC
+
+* Usage
+
+To get started, you need to enable ~ulisp-mode~: ~M-x ulisp-mode~
+
+Connect to the device: ~C-c C-o~ or ~M-x ulisp-mode-open-port~
+
+Close the connection: ~C-c C-k~ or ~M-x ulisp-mode-kill-buffer~
+
+Turn on ulisp-mode-line: ~M-x ulisp-mode-line-enable~
+
+Turn off ulisp-mode-line: ~M-x ulisp-mode-line-disable~
+
+Execute a function on the device: ~C-c C-c~
