@@ -1,5 +1,6 @@
 #+TITLE: ulisp-mode
 
+[[https://melpa.org/#/ulisp-mode][https://melpa.org/packages/ulisp-mode-badge.svg]]
 [[https://img.shields.io/badge/GNU%20Emacs-25.1-b48ead.svg]]
 
 Major mode for editing and evaluate uLisp
